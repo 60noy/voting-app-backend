@@ -24,7 +24,7 @@ export const addOne = (req, res, next) => {
     if (err) {
       res.status(500)
       return next(err)
-    } res.json({ error: false, user: newUser })
+    } res.json(newUser)
   })
 }
 
@@ -39,7 +39,7 @@ export const findById = (req, res, next) => {
         res.status(404)
         return next('no user has been found')
       }
-      res.json({ user })
+      res.json(user)
     })
   } else { next('not a valid objectid find') }
 }

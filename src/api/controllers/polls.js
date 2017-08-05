@@ -1,8 +1,19 @@
 import Poll from '../../models/polls'
 
+// lists all polls
+export const findAll = (req, res, next) => {
+  Poll.find({}, (err, polls) => {
+    if (err) {
+      return next(err)
+    }
+    res.json(polls)
+  })
+}
+
 // adds one poll with id
 export const addOneWithAuthorId = (req, res, next) => {
-  const { title, author_id } = req.body
+  const { title } = req.body
+  const { author_id } = req.params
   const poll = new Poll({
     title,
     author_id
@@ -21,10 +32,7 @@ export const findById = (req, res, next) => {
     if (err) {
       return next(err)
     }
-    if (!poll) {
-      return next('No poll has been found')
-    }
-    res.json({ poll })
+    res.json(poll)
   })
 }
 // delete a poll by id
@@ -44,9 +52,16 @@ export const findAllByAuthorId = (req, res, next) => {
     if (err) {
       return next(err)
     }
-    if (!polls) {
-      return next('No polls found')
+    res.json(polls)
+  })
+}
+
+export const updateById = (req, res, next) => {
+  const { id } = req.params
+  Poll.findByIdAndUpdate(id, { $set: res.body }, (err, poll) => {
+    if (err) {
+      return next(err)
     }
-    res.json({ polls })
+    res.json(`updated. result: ${poll}`)
   })
 }

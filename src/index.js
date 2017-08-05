@@ -27,9 +27,12 @@ app.use(cors({
   exposedHeaders: config.corsHeaders
 }))
 
+// TODO: uncomment in production
 app.use(bodyParser.json({
   limit: config.bodyLimit
 }))
+app.use(bodyParser.urlencoded({ extended: true }))
+
 
 // api router
 app.use('/api', api())
@@ -58,6 +61,12 @@ initializeDb((db) => {
 //   })
 // })
 
+app.use('*', (err, req, res, next) => {
+  if (err) {
+    res.json({ message: 'error', err })
+  }
+  next()
+})
 
 app.server.listen(process.env.PORT || config.port, () => {
   console.log(`Started on port ${app.server.address().port}`)

@@ -1,11 +1,11 @@
 import mongoose, { Schema } from 'mongoose'
 
-const { ObjectId } = mongoose.types
+const { ObjectId } = Schema.Types
 
 const pollsSchema = Schema({
   title: { type: String, required: true },
-  author_id: { type: ObjectId, required: true },
-  created_date: { type: Date, default: Date.now() },
+  author_id: { type: ObjectId, required: true, ref: 'User' },
+  created_date: { type: Date, default: Date.now },
   status: [
     {
       title: String,
@@ -14,4 +14,4 @@ const pollsSchema = Schema({
   ]
 })
 
-mongoose.model('Poll', pollsSchema)
+export default mongoose.model('Poll', pollsSchema)
