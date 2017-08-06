@@ -14,8 +14,12 @@ app.server = http.createServer(app)
 // use native promises. I can change with whatever promises library I want
 mongoose.Promise = global.Promise
 
+process.env.NODE_ENV = 'development'
+
 // logger
 app.use(morgan('dev'))
+
+// use auth0
 
 // homepage
 app.get('/', (req, res) => {
@@ -35,7 +39,32 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 
 // api router
-app.use('/api', api())
+app.use('/api', api)
+
+// const jwtCheck = jwt({
+//   secret: jwks.expressJwtSecret({
+//     cache: true,
+//     rateLimit: true,
+//     jwksRequestsPerMinute: 5,
+//     jwksUri: 'https://noy.auth0.com/.well-known/jwks.json'
+//   }),
+//   audience: 'voting-app',
+//   issuer: 'https://noy.auth0.com/',
+//   algorithms: ['RS256']
+// })
+//
+// // Enable the use of the jwtCheck middleware in all of our routes
+// app.use(jwtCheck)
+
+// If we do not get the correct credentials, we’ll return an appropriate message
+
+app.use((err, req, res, next) => {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).json({ message: 'Missing or invalid token' })
+  }
+  next(err)
+})
+
 
 // connect to db
 initializeDb((db) => {
@@ -49,6 +78,7 @@ initializeDb((db) => {
     app.use(middleware({ config, db }))
   })
 })
+
 
 // error handler
 // app.use('/api', (err, req, res) => {
@@ -68,8 +98,9 @@ app.use('*', (err, req, res, next) => {
   next()
 })
 
+
 app.server.listen(process.env.PORT || config.port, () => {
-  console.log(`Started on port ${app.server.address().port}`)
+  console.log(`Started on port ${app.server.address().port} status is ${process.env.NODE_ENV}`)
 })
 
 

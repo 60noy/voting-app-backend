@@ -22,7 +22,7 @@ export const addOneWithAuthorId = (req, res, next) => {
     if (err) {
       return next(err)
     }
-    res.json({ message: `new poll with id ${newPoll._id} has been created` })
+    res.json(newPoll)
   })
 }
 // finds poll with specific id
@@ -62,6 +62,6 @@ export const updateById = (req, res, next) => {
     if (err) {
       return next(err)
     }
-    res.json(`updated. result: ${poll}`)
+    res.json(poll)
   })
 }

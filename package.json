@@ -8,7 +8,7 @@
     "build": "babel src -s -D -d dist --presets es2015,stage-0",
     "start": "node dist",
     "prestart": "npm run -s build",
-    "test": "mocha --compilers js:babel-register ./src/tests"
+    "test": "mocha --compilers js:babel-register ./src/tests --timeout 10000"
   },
   "eslintConfig": {
     "extends": "eslint:recommended",
@@ -40,6 +40,8 @@
     "eslint-plugin-react": "7.1.0",
     "expect": "^1.20.2",
     "express": "^4.13.3",
+    "express-jwt": "^5.3.0",
+    "jwks-rsa": "^1.2.0",
     "mocha": "^3.5.0",
     "mongodb": "^2.2.30",
     "mongoose": "^4.11.5",
